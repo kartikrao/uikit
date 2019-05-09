@@ -1,9 +1,9 @@
-/*! UIkit 3.1.4 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
+/*! flUIkit 3.1.4 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define('uikit', factory) :
-    (global = global || self, global.UIkit = factory());
+    (global = global || self, global.flUIkit = factory());
 }(this, function () { 'use strict';
 
     function bind(fn, context) {
@@ -453,7 +453,7 @@
                 }
 
                 if (!ctx.id) {
-                    ctx.id = "uk-" + (Date.now()) + i;
+                    ctx.id = "fl-" + (Date.now()) + i;
                     removes.push(function () { return removeAttr(ctx, 'id'); });
                 }
 
@@ -1372,16 +1372,16 @@
         var docEl = document.documentElement;
 
         if (!isIE) {
-            return getStyles(docEl).getPropertyValue(("--uk-" + name));
+            return getStyles(docEl).getPropertyValue(("--fl-" + name));
         }
 
         if (!(name in vars)) {
 
-            /* usage in css: .uk-name:before { content:"xyz" } */
+            /* usage in css: .fl-name:before { content:"xyz" } */
 
             var element = append(docEl, document.createElement('div'));
 
-            addClass(element, ("uk-" + name));
+            addClass(element, ("fl-" + name));
 
             vars[name] = getStyle(element, 'content', ':before').replace(/^["'](.*)["']$/, '$1');
 
@@ -1447,7 +1447,7 @@
                     var type = ref.type;
 
                     clearTimeout(timer);
-                    removeClass(element, 'uk-transition');
+                    removeClass(element, 'fl-transition');
                     css(element, {
                         'transition-property': '',
                         'transition-duration': '',
@@ -1460,7 +1460,7 @@
                     return element === target;
                 });
 
-                addClass(element, 'uk-transition');
+                addClass(element, 'fl-transition');
                 css(element, assign({
                     'transition-property': Object.keys(props).map(propName).join(','),
                     'transition-duration': (duration + "ms"),
@@ -1486,13 +1486,13 @@
         },
 
         inProgress: function(element) {
-            return hasClass(element, 'uk-transition');
+            return hasClass(element, 'fl-transition');
         }
 
     };
 
-    var animationPrefix = 'uk-animation-';
-    var clsCancelAnimation = 'uk-cancel-animation';
+    var animationPrefix = 'fl-animation-';
+    var clsCancelAnimation = 'fl-cancel-animation';
 
     function animate(element, animation, duration, origin, out) {
         var arguments$1 = arguments;
@@ -1513,7 +1513,7 @@
                 if (startsWith(animation, animationPrefix)) {
 
                     if (origin) {
-                        cls += " uk-transform-origin-" + origin;
+                        cls += " fl-transform-origin-" + origin;
                     }
 
                     if (out) {
@@ -2683,30 +2683,30 @@
         propName: propName
     });
 
-    function componentAPI (UIkit) {
+    function componentAPI (flUIkit) {
 
-        var DATA = UIkit.data;
+        var DATA = flUIkit.data;
 
         var components = {};
 
-        UIkit.component = function (name, options) {
+        flUIkit.component = function (name, options) {
 
             if (!options) {
 
                 if (isPlainObject(components[name])) {
-                    components[name] = UIkit.extend(components[name]);
+                    components[name] = flUIkit.extend(components[name]);
                 }
 
                 return components[name];
 
             }
 
-            UIkit[name] = function (element, data) {
+            flUIkit[name] = function (element, data) {
                 var i = arguments.length, argsArray = Array(i);
                 while ( i-- ) argsArray[i] = arguments[i];
 
 
-                var component = UIkit.component(name);
+                var component = flUIkit.component(name);
 
                 if (isPlainObject(element)) {
                     return new component({data: element});
@@ -2720,7 +2720,7 @@
 
                 function init(element) {
 
-                    var instance = UIkit.getComponent(element, name);
+                    var instance = flUIkit.getComponent(element, name);
 
                     if (instance) {
                         if (!data) {
@@ -2741,21 +2741,21 @@
             opt.name = name;
 
             if (opt.install) {
-                opt.install(UIkit, opt, name);
+                opt.install(flUIkit, opt, name);
             }
 
-            if (UIkit._initialized && !opt.functional) {
+            if (flUIkit._initialized && !opt.functional) {
                 var id = hyphenate(name);
-                fastdom.read(function () { return UIkit[name](("[uk-" + id + "],[data-uk-" + id + "]")); });
+                fastdom.read(function () { return flUIkit[name](("[fl-" + id + "],[data-fl-" + id + "]")); });
             }
 
             return components[name] = isPlainObject(options) ? opt : options;
         };
 
-        UIkit.getComponents = function (element) { return element && element[DATA] || {}; };
-        UIkit.getComponent = function (element, name) { return UIkit.getComponents(element)[name]; };
+        flUIkit.getComponents = function (element) { return element && element[DATA] || {}; };
+        flUIkit.getComponent = function (element, name) { return flUIkit.getComponents(element)[name]; };
 
-        UIkit.connect = function (node) {
+        flUIkit.connect = function (node) {
 
             if (node[DATA]) {
                 for (var name in node[DATA]) {
@@ -2768,14 +2768,14 @@
                 var name$1 = getComponentName(node.attributes[i].name);
 
                 if (name$1 && name$1 in components) {
-                    UIkit[name$1](node);
+                    flUIkit[name$1](node);
                 }
 
             }
 
         };
 
-        UIkit.disconnect = function (node) {
+        flUIkit.disconnect = function (node) {
             for (var name in node[DATA]) {
                 node[DATA][name]._callDisconnected();
             }
@@ -2784,15 +2784,15 @@
     }
 
     function getComponentName(attribute) {
-        return startsWith(attribute, 'uk-') || startsWith(attribute, 'data-uk-')
-            ? camelize(attribute.replace('data-uk-', '').replace('uk-', ''))
+        return startsWith(attribute, 'fl-') || startsWith(attribute, 'data-fl-')
+            ? camelize(attribute.replace('data-fl-', '').replace('fl-', ''))
             : false;
     }
 
-    function boot (UIkit) {
+    function boot (flUIkit) {
 
-        var connect = UIkit.connect;
-        var disconnect = UIkit.disconnect;
+        var connect = flUIkit.connect;
+        var disconnect = flUIkit.disconnect;
 
         if (!('MutationObserver' in window)) {
             return;
@@ -2828,7 +2828,7 @@
                 attributes: true
             });
 
-            UIkit._initialized = true;
+            flUIkit._initialized = true;
         }
 
         function applyMutation(mutation) {
@@ -2840,7 +2840,7 @@
                 ? applyChildList(mutation)
                 : applyAttribute(mutation);
 
-            update && UIkit.update(target);
+            update && flUIkit.update(target);
 
         }
 
@@ -2855,16 +2855,16 @@
 
             var name = getComponentName(attributeName);
 
-            if (!name || !(name in UIkit)) {
+            if (!name || !(name in flUIkit)) {
                 return;
             }
 
             if (hasAttr(target, attributeName)) {
-                UIkit[name](target);
+                flUIkit[name](target);
                 return true;
             }
 
-            var component = UIkit.getComponent(target, name);
+            var component = flUIkit.getComponent(target, name);
 
             if (component) {
                 component.$destroy();
@@ -2891,7 +2891,7 @@
 
         function apply(node, fn) {
 
-            if (node.nodeType !== 1 || hasAttr(node, 'uk-no-boot')) {
+            if (node.nodeType !== 1 || hasAttr(node, 'fl-no-boot')) {
                 return;
             }
 
@@ -2906,11 +2906,11 @@
 
     }
 
-    function globalAPI (UIkit) {
+    function globalAPI (flUIkit) {
 
-        var DATA = UIkit.data;
+        var DATA = flUIkit.data;
 
-        UIkit.use = function (plugin) {
+        flUIkit.use = function (plugin) {
 
             if (plugin.installed) {
                 return;
@@ -2922,17 +2922,17 @@
             return this;
         };
 
-        UIkit.mixin = function (mixin, component) {
-            component = (isString(component) ? UIkit.component(component) : component) || this;
+        flUIkit.mixin = function (mixin, component) {
+            component = (isString(component) ? flUIkit.component(component) : component) || this;
             component.options = mergeOptions(component.options, mixin);
         };
 
-        UIkit.extend = function (options) {
+        flUIkit.extend = function (options) {
 
             options = options || {};
 
             var Super = this;
-            var Sub = function UIkitComponent(options) {
+            var Sub = function flUIkitComponent(options) {
                 this._init(options);
             };
 
@@ -2946,7 +2946,7 @@
             return Sub;
         };
 
-        UIkit.update = function (element, e) {
+        flUIkit.update = function (element, e) {
 
             element = element ? toNode(element) : document.body;
 
@@ -2956,7 +2956,7 @@
         };
 
         var container;
-        Object.defineProperty(UIkit, 'container', {
+        Object.defineProperty(flUIkit, 'container', {
 
             get: function() {
                 return container || document.body;
@@ -2991,9 +2991,9 @@
 
     }
 
-    function hooksAPI (UIkit) {
+    function hooksAPI (flUIkit) {
 
-        UIkit.prototype._callHook = function (hook) {
+        flUIkit.prototype._callHook = function (hook) {
             var this$1 = this;
 
 
@@ -3004,7 +3004,7 @@
             }
         };
 
-        UIkit.prototype._callConnected = function () {
+        flUIkit.prototype._callConnected = function () {
 
             if (this._connected) {
                 return;
@@ -3024,7 +3024,7 @@
             this._callUpdate();
         };
 
-        UIkit.prototype._callDisconnected = function () {
+        flUIkit.prototype._callDisconnected = function () {
 
             if (!this._connected) {
                 return;
@@ -3044,7 +3044,7 @@
 
         };
 
-        UIkit.prototype._callUpdate = function (e) {
+        flUIkit.prototype._callUpdate = function (e) {
             var this$1 = this;
             if ( e === void 0 ) e = 'update';
 
@@ -3097,11 +3097,11 @@
 
     }
 
-    function stateAPI (UIkit) {
+    function stateAPI (flUIkit) {
 
         var uid = 0;
 
-        UIkit.prototype._init = function (options) {
+        flUIkit.prototype._init = function (options) {
 
             options = options || {};
             options.data = normalizeData(options, this.constructor.options);
@@ -3124,7 +3124,7 @@
             }
         };
 
-        UIkit.prototype._initData = function () {
+        flUIkit.prototype._initData = function () {
 
             var ref = this.$options;
             var data = ref.data; if ( data === void 0 ) data = {};
@@ -3134,7 +3134,7 @@
             }
         };
 
-        UIkit.prototype._initMethods = function () {
+        flUIkit.prototype._initMethods = function () {
 
             var ref = this.$options;
             var methods = ref.methods;
@@ -3146,7 +3146,7 @@
             }
         };
 
-        UIkit.prototype._initComputeds = function () {
+        flUIkit.prototype._initComputeds = function () {
 
             var ref = this.$options;
             var computed = ref.computed;
@@ -3160,7 +3160,7 @@
             }
         };
 
-        UIkit.prototype._callWatches = function () {
+        flUIkit.prototype._callWatches = function () {
 
             var ref = this;
             var computed = ref.$options.computed;
@@ -3179,7 +3179,7 @@
 
         };
 
-        UIkit.prototype._initProps = function (props) {
+        flUIkit.prototype._initProps = function (props) {
 
             var key;
 
@@ -3199,7 +3199,7 @@
             }
         };
 
-        UIkit.prototype._initEvents = function () {
+        flUIkit.prototype._initEvents = function () {
             var this$1 = this;
 
 
@@ -3222,12 +3222,12 @@
             }
         };
 
-        UIkit.prototype._unbindEvents = function () {
+        flUIkit.prototype._unbindEvents = function () {
             this._events.forEach(function (unbind) { return unbind(); });
             this._events = [];
         };
 
-        UIkit.prototype._initObserver = function () {
+        flUIkit.prototype._initObserver = function () {
             var this$1 = this;
 
 
@@ -3444,11 +3444,11 @@
         }
     }
 
-    function instanceAPI (UIkit) {
+    function instanceAPI (flUIkit) {
 
-        var DATA = UIkit.data;
+        var DATA = flUIkit.data;
 
-        UIkit.prototype.$mount = function (el) {
+        flUIkit.prototype.$mount = function (el) {
 
             var ref = this.$options;
             var name = ref.name;
@@ -3470,16 +3470,16 @@
             }
         };
 
-        UIkit.prototype.$emit = function (e) {
+        flUIkit.prototype.$emit = function (e) {
             this._callUpdate(e);
         };
 
-        UIkit.prototype.$reset = function () {
+        flUIkit.prototype.$reset = function () {
             this._callDisconnected();
             this._callConnected();
         };
 
-        UIkit.prototype.$destroy = function (removeEl) {
+        flUIkit.prototype.$destroy = function (removeEl) {
             if ( removeEl === void 0 ) removeEl = false;
 
 
@@ -3508,17 +3508,17 @@
             }
         };
 
-        UIkit.prototype.$create = function (component, element, data) {
-            return UIkit[component](element, data);
+        flUIkit.prototype.$create = function (component, element, data) {
+            return flUIkit[component](element, data);
         };
 
-        UIkit.prototype.$update = UIkit.update;
-        UIkit.prototype.$getComponent = UIkit.getComponent;
+        flUIkit.prototype.$update = flUIkit.update;
+        flUIkit.prototype.$getComponent = flUIkit.getComponent;
 
         var names = {};
-        Object.defineProperties(UIkit.prototype, {
+        Object.defineProperties(flUIkit.prototype, {
 
-            $container: Object.getOwnPropertyDescriptor(UIkit, 'container'),
+            $container: Object.getOwnPropertyDescriptor(flUIkit, 'container'),
 
             $name: {
 
@@ -3527,7 +3527,7 @@
                     var name = ref.name;
 
                     if (!names[name]) {
-                        names[name] = UIkit.prefix + hyphenate(name);
+                        names[name] = flUIkit.prefix + hyphenate(name);
                     }
 
                     return names[name];
@@ -3539,20 +3539,20 @@
 
     }
 
-    var UIkit = function (options) {
+    var flUIkit = function (options) {
         this._init(options);
     };
 
-    UIkit.util = util;
-    UIkit.data = '__uikit__';
-    UIkit.prefix = 'uk-';
-    UIkit.options = {};
+    flUIkit.util = util;
+    flUIkit.data = '__uikit__';
+    flUIkit.prefix = 'fl-';
+    flUIkit.options = {};
 
-    globalAPI(UIkit);
-    hooksAPI(UIkit);
-    stateAPI(UIkit);
-    componentAPI(UIkit);
-    instanceAPI(UIkit);
+    globalAPI(flUIkit);
+    hooksAPI(flUIkit);
+    stateAPI(flUIkit);
+    componentAPI(flUIkit);
+    instanceAPI(flUIkit);
 
     var Class = {
 
@@ -3641,7 +3641,7 @@
                         var body = document.body;
                         var scroll = body.scrollTop;
                         var el = toggled[0];
-                        var inProgress = Animation.inProgress(el) && hasClass(el, 'uk-animation-leave')
+                        var inProgress = Animation.inProgress(el) && hasClass(el, 'fl-animation-leave')
                                 || Transition.inProgress(el) && el.style.height === '0px';
 
                         p = all(toggled);
@@ -3687,7 +3687,7 @@
                 show = isBoolean(show)
                     ? show
                     : Animation.inProgress(el)
-                        ? hasClass(el, 'uk-animation-leave')
+                        ? hasClass(el, 'fl-animation-leave')
                         : Transition.inProgress(el)
                             ? el.style.height === '0px'
                             : !this.isToggled(el);
@@ -3818,9 +3818,9 @@
             animation: [true],
             collapsible: true,
             multiple: false,
-            clsOpen: 'uk-open',
-            toggle: '> .uk-accordion-title',
-            content: '> .uk-accordion-content',
+            clsOpen: 'fl-open',
+            toggle: '> .fl-accordion-title',
+            content: '> .fl-accordion-content',
             transition: 'ease'
         },
 
@@ -3943,7 +3943,7 @@
 
         data: {
             animation: [true],
-            selClose: '.uk-alert-close',
+            selClose: '.fl-alert-close',
             duration: 150,
             hideProps: assign({opacity: 0}, Togglable.data.hideProps)
         },
@@ -3979,16 +3979,16 @@
 
     };
 
-    function Core (UIkit) {
+    function Core (flUIkit) {
 
         ready(function () {
 
-            UIkit.update();
-            on(window, 'load resize', function () { return UIkit.update(null, 'resize'); });
+            flUIkit.update();
+            on(window, 'load resize', function () { return flUIkit.update(null, 'resize'); });
             on(document, 'loadedmetadata load', function (ref) {
                 var target = ref.target;
 
-                return UIkit.update(target, 'resize');
+                return flUIkit.update(target, 'resize');
             }, true);
 
             // throttle `scroll` event (Safari triggers multiple `scroll` events per frame)
@@ -4002,7 +4002,7 @@
                 fastdom.write(function () { return pending = false; });
 
                 var target = e.target;
-                UIkit.update(target.nodeType !== 1 ? document.body : target, e.type);
+                flUIkit.update(target.nodeType !== 1 ? document.body : target, e.type);
 
             }, {passive: true, capture: true});
 
@@ -4010,7 +4010,7 @@
             on(document, 'animationstart', function (ref) {
                 var target = ref.target;
 
-                if ((css(target, 'animationName') || '').match(/^uk-.*(left|right)/)) {
+                if ((css(target, 'animationName') || '').match(/^fl-.*(left|right)/)) {
 
                     started++;
                     css(document.body, 'overflowX', 'hidden');
@@ -4305,8 +4305,8 @@
             delayHide: 800,
             clsDrop: false,
             hoverIdle: 200,
-            animation: ['uk-animation-fade'],
-            cls: 'uk-open'
+            animation: ['fl-animation-fade'],
+            cls: 'fl-open'
         },
 
         computed: {
@@ -4320,7 +4320,7 @@
             clsDrop: function(ref) {
                 var clsDrop = ref.clsDrop;
 
-                return clsDrop || ("uk-" + (this.$options.name));
+                return clsDrop || ("fl-" + (this.$options.name));
             },
 
             clsPos: function() {
@@ -4839,8 +4839,8 @@
         },
 
         data: {
-            margin: 'uk-margin-small-top',
-            firstColumn: 'uk-first-column'
+            margin: 'fl-margin-small-top',
+            firstColumn: 'fl-first-column'
         },
 
         update: {
@@ -4971,8 +4971,8 @@
         },
 
         data: {
-            margin: 'uk-grid-margin',
-            clsStack: 'uk-grid-stack',
+            margin: 'fl-grid-margin',
+            clsStack: 'fl-grid-stack',
             masonry: false,
             parallax: 0
         },
@@ -4992,7 +4992,7 @@
         },
 
         connected: function() {
-            this.masonry && addClass(this.$el, 'uk-flex-top uk-flex-wrap-top');
+            this.masonry && addClass(this.$el, 'fl-flex-top fl-flex-wrap-top');
         },
 
         update: [
@@ -5366,7 +5366,7 @@
             var assign;
 
 
-            this.class += ' uk-svg';
+            this.class += ' fl-svg';
 
             if (!this.icon && includes(this.src, '#')) {
 
@@ -5538,7 +5538,7 @@
         var length = getMaxPathLength(el);
 
         if (length) {
-            el.style.setProperty('--uk-animation-stroke', length);
+            el.style.setProperty('--fl-animation-stroke', length);
         }
 
     }
@@ -5639,7 +5639,7 @@
         isIcon: true,
 
         connected: function() {
-            addClass(this.$el, 'uk-icon');
+            addClass(this.$el, 'fl-icon');
         },
 
         methods: {
@@ -5674,7 +5674,7 @@
         extends: IconComponent,
 
         connected: function() {
-            addClass(this.$el, 'uk-slidenav');
+            addClass(this.$el, 'fl-slidenav');
         },
 
         computed: {
@@ -5682,7 +5682,7 @@
             icon: function(ref, $el) {
                 var icon = ref.icon;
 
-                return hasClass($el, 'uk-slidenav-large')
+                return hasClass($el, 'fl-slidenav-large')
                     ? (icon + "-large")
                     : icon;
             }
@@ -5700,9 +5700,9 @@
             icon: function(ref, $el) {
                 var icon = ref.icon;
 
-                return hasClass($el, 'uk-search-icon') && parents($el, '.uk-search-large').length
+                return hasClass($el, 'fl-search-icon') && parents($el, '.fl-search-large').length
                     ? 'search-large'
-                    : parents($el, '.uk-search-navbar').length
+                    : parents($el, '.fl-search-navbar').length
                         ? 'search-navbar'
                         : icon;
             }
@@ -5718,7 +5718,7 @@
         computed: {
 
             icon: function() {
-                return ("close-" + (hasClass(this.$el, 'uk-close-large') ? 'large' : 'icon'));
+                return ("close-" + (hasClass(this.$el, 'fl-close-large') ? 'large' : 'icon'));
             }
 
         }
@@ -5737,8 +5737,8 @@
 
     };
 
-    function install(UIkit) {
-        UIkit.icon.add = function (name, svg) {
+    function install(flUIkit) {
+        flUIkit.icon.add = function (name, svg) {
             var obj;
 
 
@@ -5748,8 +5748,8 @@
                 delete parsed[name];
             });
 
-            if (UIkit._initialized) {
-                apply(document.body, function (el) { return each(UIkit.getComponents(el), function (cmp) {
+            if (flUIkit._initialized) {
+                apply(document.body, function (el) { return each(flUIkit.getComponents(el), function (cmp) {
                         cmp.$options.isIcon && cmp.icon in added && cmp.$reset();
                     }); }
                 );
@@ -6082,8 +6082,8 @@
 
         data: {
             fill: '',
-            clsWrapper: 'uk-leader-fill',
-            clsHide: 'uk-leader-hide',
+            clsWrapper: 'fl-leader-fill',
+            clsHide: 'fl-leader-hide',
             attrFill: 'data-fill'
         },
 
@@ -6180,7 +6180,7 @@
         },
 
         data: {
-            cls: 'uk-open',
+            cls: 'fl-open',
             escClose: true,
             bgClose: true,
             overlay: true,
@@ -6459,9 +6459,9 @@
         mixins: [Modal],
 
         data: {
-            clsPage: 'uk-modal-page',
-            selPanel: '.uk-modal-dialog',
-            selClose: '.uk-modal-close, .uk-modal-close-default, .uk-modal-close-outside, .uk-modal-close-full'
+            clsPage: 'fl-modal-page',
+            selPanel: '.fl-modal-dialog',
+            selClose: '.fl-modal-close, .fl-modal-close-default, .fl-modal-close-outside, .fl-modal-close-full'
         },
 
         events: [
@@ -6473,8 +6473,8 @@
 
                 handler: function() {
 
-                    if (hasClass(this.panel, 'uk-margin-auto-vertical')) {
-                        addClass(this.$el, 'uk-flex');
+                    if (hasClass(this.panel, 'fl-margin-auto-vertical')) {
+                        addClass(this.$el, 'fl-flex');
                     } else {
                         css(this.$el, 'display', 'block');
                     }
@@ -6491,7 +6491,7 @@
                 handler: function() {
 
                     css(this.$el, 'display', '');
-                    removeClass(this.$el, 'uk-flex');
+                    removeClass(this.$el, 'fl-flex');
 
                 }
             }
@@ -6500,11 +6500,11 @@
 
     };
 
-    function install$1(UIkit) {
+    function install$1(flUIkit) {
 
-        UIkit.modal.dialog = function (content, options) {
+        flUIkit.modal.dialog = function (content, options) {
 
-            var dialog = UIkit.modal((" <div class=\"uk-modal\"> <div class=\"uk-modal-dialog\">" + content + "</div> </div> "), options);
+            var dialog = flUIkit.modal((" <div class=\"fl-modal\"> <div class=\"fl-modal-dialog\">" + content + "</div> </div> "), options);
 
             dialog.show();
 
@@ -6520,22 +6520,22 @@
             return dialog;
         };
 
-        UIkit.modal.alert = function (message, options) {
+        flUIkit.modal.alert = function (message, options) {
 
-            options = assign({bgClose: false, escClose: false, labels: UIkit.modal.labels}, options);
+            options = assign({bgClose: false, escClose: false, labels: flUIkit.modal.labels}, options);
 
             return new Promise(
-                function (resolve) { return on(UIkit.modal.dialog((" <div class=\"uk-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"uk-modal-footer uk-text-right\"> <button class=\"uk-button uk-button-primary uk-modal-close\" autofocus>" + (options.labels.ok) + "</button> </div> "), options).$el, 'hide', resolve); }
+                function (resolve) { return on(flUIkit.modal.dialog((" <div class=\"fl-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"fl-modal-footer fl-text-right\"> <button class=\"fl-button fl-button-primary fl-modal-close\" autofocus>" + (options.labels.ok) + "</button> </div> "), options).$el, 'hide', resolve); }
             );
         };
 
-        UIkit.modal.confirm = function (message, options) {
+        flUIkit.modal.confirm = function (message, options) {
 
-            options = assign({bgClose: false, escClose: true, labels: UIkit.modal.labels}, options);
+            options = assign({bgClose: false, escClose: true, labels: flUIkit.modal.labels}, options);
 
             return new Promise(function (resolve, reject) {
 
-                var confirm = UIkit.modal.dialog((" <form> <div class=\"uk-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"uk-modal-footer uk-text-right\"> <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">" + (options.labels.cancel) + "</button> <button class=\"uk-button uk-button-primary\" autofocus>" + (options.labels.ok) + "</button> </div> </form> "), options);
+                var confirm = flUIkit.modal.dialog((" <form> <div class=\"fl-modal-body\">" + (isString(message) ? message : html(message)) + "</div> <div class=\"fl-modal-footer fl-text-right\"> <button class=\"fl-button fl-button-default fl-modal-close\" type=\"button\">" + (options.labels.cancel) + "</button> <button class=\"fl-button fl-button-primary\" autofocus>" + (options.labels.ok) + "</button> </div> </form> "), options);
 
                 var resolved = false;
 
@@ -6554,13 +6554,13 @@
             });
         };
 
-        UIkit.modal.prompt = function (message, value, options) {
+        flUIkit.modal.prompt = function (message, value, options) {
 
-            options = assign({bgClose: false, escClose: true, labels: UIkit.modal.labels}, options);
+            options = assign({bgClose: false, escClose: true, labels: flUIkit.modal.labels}, options);
 
             return new Promise(function (resolve) {
 
-                var prompt = UIkit.modal.dialog((" <form class=\"uk-form-stacked\"> <div class=\"uk-modal-body\"> <label>" + (isString(message) ? message : html(message)) + "</label> <input class=\"uk-input\" autofocus> </div> <div class=\"uk-modal-footer uk-text-right\"> <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">" + (options.labels.cancel) + "</button> <button class=\"uk-button uk-button-primary\">" + (options.labels.ok) + "</button> </div> </form> "), options),
+                var prompt = flUIkit.modal.dialog((" <form class=\"fl-form-stacked\"> <div class=\"fl-modal-body\"> <label>" + (isString(message) ? message : html(message)) + "</label> <input class=\"fl-input\" autofocus> </div> <div class=\"fl-modal-footer fl-text-right\"> <button class=\"fl-button fl-button-default fl-modal-close\" type=\"button\">" + (options.labels.cancel) + "</button> <button class=\"fl-button fl-button-primary\">" + (options.labels.ok) + "</button> </div> </form> "), options),
                     input = $('input', prompt.$el);
 
                 input.value = value;
@@ -6582,7 +6582,7 @@
             });
         };
 
-        UIkit.modal.labels = {
+        flUIkit.modal.labels = {
             ok: 'Ok',
             cancel: 'Cancel'
         };
@@ -6594,7 +6594,7 @@
         extends: Accordion,
 
         data: {
-            targets: '> .uk-parent',
+            targets: '> .fl-parent',
             toggle: '> a',
             content: '> ul'
         }
@@ -6622,9 +6622,9 @@
         },
 
         data: {
-            dropdown: '.uk-navbar-nav > li',
+            dropdown: '.fl-navbar-nav > li',
             align: !isRtl ? 'left' : 'right',
-            clsDrop: 'uk-navbar-dropdown',
+            clsDrop: 'fl-navbar-dropdown',
             mode: undefined,
             offset: undefined,
             delayShow: undefined,
@@ -6637,7 +6637,7 @@
             dropbarAnchor: false,
             duration: 200,
             forceHeight: true,
-            selMinHeight: '.uk-navbar-nav > li > a, .uk-navbar-item, .uk-navbar-toggle'
+            selMinHeight: '.fl-navbar-nav > li > a, .fl-navbar-item, .fl-navbar-toggle'
         },
 
         computed: {
@@ -6675,14 +6675,14 @@
             var ref = this.$props;
             var dropbar = ref.dropbar;
 
-            this.dropbar = dropbar && (query(dropbar, this.$el) || $('+ .uk-navbar-dropbar', this.$el) || $('<div></div>'));
+            this.dropbar = dropbar && (query(dropbar, this.$el) || $('+ .fl-navbar-dropbar', this.$el) || $('<div></div>'));
 
             if (this.dropbar) {
 
-                addClass(this.dropbar, 'uk-navbar-dropbar');
+                addClass(this.dropbar, 'fl-navbar-dropbar');
 
                 if (this.dropbarMode === 'slide') {
-                    addClass(this.dropbar, 'uk-navbar-dropbar-slide');
+                    addClass(this.dropbar, 'fl-navbar-dropbar-slide');
                 }
             }
 
@@ -6878,15 +6878,15 @@
             mode: 'slide',
             flip: false,
             overlay: false,
-            clsPage: 'uk-offcanvas-page',
-            clsContainer: 'uk-offcanvas-container',
-            selPanel: '.uk-offcanvas-bar',
-            clsFlip: 'uk-offcanvas-flip',
-            clsContainerAnimation: 'uk-offcanvas-container-animation',
-            clsSidebarAnimation: 'uk-offcanvas-bar-animation',
-            clsMode: 'uk-offcanvas',
-            clsOverlay: 'uk-offcanvas-overlay',
-            selClose: '.uk-offcanvas-close'
+            clsPage: 'fl-offcanvas-page',
+            clsContainer: 'fl-offcanvas-container',
+            selPanel: '.fl-offcanvas-bar',
+            clsFlip: 'fl-offcanvas-flip',
+            clsContainerAnimation: 'fl-offcanvas-container-animation',
+            clsSidebarAnimation: 'fl-offcanvas-bar-animation',
+            clsMode: 'fl-offcanvas',
+            clsOverlay: 'fl-offcanvas-overlay',
+            selClose: '.fl-offcanvas-close'
         },
 
         computed: {
@@ -7127,8 +7127,8 @@
         },
 
         data: {
-            selContainer: '.uk-modal',
-            selContent: '.uk-modal-dialog'
+            selContainer: '.fl-modal',
+            selContent: '.fl-modal-dialog'
         },
 
         computed: {
@@ -7186,7 +7186,7 @@
         props: ['width', 'height'],
 
         connected: function() {
-            addClass(this.$el, 'uk-responsive-width');
+            addClass(this.$el, 'fl-responsive-width');
         },
 
         update: {
@@ -7307,7 +7307,7 @@
             offsetLeft: 0,
             repeat: false,
             delay: 0,
-            inViewClass: 'uk-scrollspy-inview'
+            inViewClass: 'fl-scrollspy-inview'
         }); },
 
         computed: {
@@ -7348,7 +7348,7 @@
                         var state = el._ukScrollspyState;
 
                         if (!state) {
-                            state = {cls: data(el, 'uk-scrollspy-class') || this$1.cls};
+                            state = {cls: data(el, 'fl-scrollspy-class') || this$1.cls};
                         }
 
                         state.show = isInView(el, this$1.offsetTop, this$1.offsetLeft);
@@ -7460,7 +7460,7 @@
         },
 
         data: {
-            cls: 'uk-active',
+            cls: 'fl-active',
             closest: false,
             scroll: false,
             overflow: true,
@@ -7582,10 +7582,10 @@
             bottom: false,
             offset: 0,
             animation: '',
-            clsActive: 'uk-active',
+            clsActive: 'fl-active',
             clsInactive: '',
-            clsFixed: 'uk-sticky-fixed',
-            clsBelow: 'uk-sticky-below',
+            clsFixed: 'fl-sticky-fixed',
+            clsBelow: 'fl-sticky-below',
             selTarget: '',
             widthElement: false,
             showOnUp: false,
@@ -7627,7 +7627,7 @@
         },
 
         connected: function() {
-            this.placeholder = $('+ .uk-sticky-placeholder', this.$el) || $('<div class="uk-sticky-placeholder"></div>');
+            this.placeholder = $('+ .fl-sticky-placeholder', this.$el) || $('<div class="fl-sticky-placeholder"></div>');
             this.isFixed = false;
             this.isActive = false;
         },
@@ -7924,13 +7924,13 @@
         },
 
         data: {
-            connect: '~.uk-switcher',
+            connect: '~.fl-switcher',
             toggle: '> * > :first-child',
             active: 0,
             swiping: true,
-            cls: 'uk-active',
-            clsContainer: 'uk-switcher',
-            attrItem: 'uk-switcher-item',
+            cls: 'fl-active',
+            clsContainer: 'fl-switcher',
+            attrItem: 'fl-switcher-item',
             queued: true
         },
 
@@ -7957,7 +7957,7 @@
                 name: 'click',
 
                 delegate: function() {
-                    return ((this.toggle) + ":not(.uk-disabled)");
+                    return ((this.toggle) + ":not(.fl-disabled)");
                 },
 
                 handler: function(e) {
@@ -8035,7 +8035,7 @@
                 var toggle, active, next = getIndex(item, children, prev);
 
                 for (var i = 0; i < length; i++, next = (next + dir + length) % length) {
-                    if (!matches(this.toggles[next], '.uk-disabled *, .uk-disabled, [disabled]')) {
+                    if (!matches(this.toggles[next], '.fl-disabled *, .fl-disabled, [disabled]')) {
                         toggle = this.toggles[next];
                         active = children[next];
                         break;
@@ -8077,15 +8077,15 @@
 
         data: {
             media: 960,
-            attrItem: 'uk-tab-item'
+            attrItem: 'fl-tab-item'
         },
 
         connected: function() {
 
-            var cls = hasClass(this.$el, 'uk-tab-left')
-                ? 'uk-tab-left'
-                : hasClass(this.$el, 'uk-tab-right')
-                    ? 'uk-tab-right'
+            var cls = hasClass(this.$el, 'fl-tab-left')
+                ? 'fl-tab-left'
+                : hasClass(this.$el, 'fl-tab-right')
+                    ? 'fl-tab-right'
                     : false;
 
             if (cls) {
@@ -8212,60 +8212,60 @@
 
     };
 
-    function core (UIkit) {
+    function core (flUIkit) {
 
         // core components
-        UIkit.component('accordion', Accordion);
-        UIkit.component('alert', Alert);
-        UIkit.component('cover', Cover);
-        UIkit.component('drop', Drop);
-        UIkit.component('dropdown', Dropdown);
-        UIkit.component('formCustom', FormCustom);
-        UIkit.component('gif', Gif);
-        UIkit.component('grid', Grid);
-        UIkit.component('heightMatch', HeightMatch);
-        UIkit.component('heightViewport', HeightViewport);
-        UIkit.component('icon', Icon);
-        UIkit.component('img', Img);
-        UIkit.component('leader', Leader);
-        UIkit.component('margin', Margin);
-        UIkit.component('modal', Modal$1);
-        UIkit.component('nav', Nav);
-        UIkit.component('navbar', Navbar);
-        UIkit.component('offcanvas', Offcanvas);
-        UIkit.component('overflowAuto', OverflowAuto);
-        UIkit.component('responsive', Responsive);
-        UIkit.component('scroll', Scroll);
-        UIkit.component('scrollspy', Scrollspy);
-        UIkit.component('scrollspyNav', ScrollspyNav);
-        UIkit.component('sticky', Sticky);
-        UIkit.component('svg', Svg);
-        UIkit.component('switcher', Switcher);
-        UIkit.component('tab', Tab);
-        UIkit.component('toggle', Toggle);
-        UIkit.component('video', Video);
+        flUIkit.component('accordion', Accordion);
+        flUIkit.component('alert', Alert);
+        flUIkit.component('cover', Cover);
+        flUIkit.component('drop', Drop);
+        flUIkit.component('dropdown', Dropdown);
+        flUIkit.component('formCustom', FormCustom);
+        flUIkit.component('gif', Gif);
+        flUIkit.component('grid', Grid);
+        flUIkit.component('heightMatch', HeightMatch);
+        flUIkit.component('heightViewport', HeightViewport);
+        flUIkit.component('icon', Icon);
+        flUIkit.component('img', Img);
+        flUIkit.component('leader', Leader);
+        flUIkit.component('margin', Margin);
+        flUIkit.component('modal', Modal$1);
+        flUIkit.component('nav', Nav);
+        flUIkit.component('navbar', Navbar);
+        flUIkit.component('offcanvas', Offcanvas);
+        flUIkit.component('overflowAuto', OverflowAuto);
+        flUIkit.component('responsive', Responsive);
+        flUIkit.component('scroll', Scroll);
+        flUIkit.component('scrollspy', Scrollspy);
+        flUIkit.component('scrollspyNav', ScrollspyNav);
+        flUIkit.component('sticky', Sticky);
+        flUIkit.component('svg', Svg);
+        flUIkit.component('switcher', Switcher);
+        flUIkit.component('tab', Tab);
+        flUIkit.component('toggle', Toggle);
+        flUIkit.component('video', Video);
 
         // Icon components
-        UIkit.component('close', Close);
-        UIkit.component('marker', IconComponent);
-        UIkit.component('navbarToggleIcon', IconComponent);
-        UIkit.component('overlayIcon', IconComponent);
-        UIkit.component('paginationNext', IconComponent);
-        UIkit.component('paginationPrevious', IconComponent);
-        UIkit.component('searchIcon', Search);
-        UIkit.component('slidenavNext', Slidenav);
-        UIkit.component('slidenavPrevious', Slidenav);
-        UIkit.component('spinner', Spinner);
-        UIkit.component('totop', IconComponent);
+        flUIkit.component('close', Close);
+        flUIkit.component('marker', IconComponent);
+        flUIkit.component('navbarToggleIcon', IconComponent);
+        flUIkit.component('overlayIcon', IconComponent);
+        flUIkit.component('paginationNext', IconComponent);
+        flUIkit.component('paginationPrevious', IconComponent);
+        flUIkit.component('searchIcon', Search);
+        flUIkit.component('slidenavNext', Slidenav);
+        flUIkit.component('slidenavPrevious', Slidenav);
+        flUIkit.component('spinner', Spinner);
+        flUIkit.component('totop', IconComponent);
 
         // core functionality
-        UIkit.use(Core);
+        flUIkit.use(Core);
 
     }
 
-    UIkit.version = '3.1.4';
+    flUIkit.version = '3.1.4';
 
-    core(UIkit);
+    core(flUIkit);
 
     var Countdown = {
 
@@ -8278,7 +8278,7 @@
 
         data: {
             date: '',
-            clsWrapper: '.uk-countdown-%unit%'
+            clsWrapper: '.fl-countdown-%unit%'
         },
 
         computed: {
@@ -8435,7 +8435,7 @@
         };
     }
 
-    var targetClass = 'uk-animation-target';
+    var targetClass = 'fl-animation-target';
 
     var Animate = {
 
@@ -8599,8 +8599,8 @@
         data: {
             target: null,
             selActive: false,
-            attrItem: 'uk-filter-control',
-            cls: 'uk-active',
+            attrItem: 'fl-filter-control',
+            cls: 'fl-active',
             animation: 250
         },
 
@@ -9381,7 +9381,7 @@
                     html(this.nav, this.slides.map(function (_, i) { return ("<li " + (this$1.attrItem) + "=\"" + i + "\"><a href=\"#\"></a></li>"); }).join(''));
                 }
 
-                toggleClass($$(this.selNavItem, this.$el).concat(this.nav), 'uk-hidden', !this.maxIndex);
+                toggleClass($$(this.selNavItem, this.$el).concat(this.nav), 'fl-hidden', !this.maxIndex);
 
                 this.updateNav();
 
@@ -9429,7 +9429,7 @@
                     var cmd = data(el, this$1.attrItem);
 
                     toggleClass(el, this$1.clsActive, toNumber(cmd) === i);
-                    toggleClass(el, 'uk-invisible', this$1.finite && (cmd === 'previous' && i === 0 || cmd === 'next' && i >= this$1.maxIndex));
+                    toggleClass(el, 'fl-invisible', this$1.finite && (cmd === 'previous' && i === 0 || cmd === 'next' && i >= this$1.maxIndex));
                 });
 
             }
@@ -9457,7 +9457,7 @@
             index: 0,
             stack: [],
             percent: 0,
-            clsActive: 'uk-active',
+            clsActive: 'fl-active',
             clsActivated: false,
             Transitioner: false,
             transitionOptions: {}
@@ -9680,7 +9680,7 @@
 
         data: {
             animation: 'slide',
-            clsActivated: 'uk-transition-active',
+            clsActivated: 'fl-transition-active',
             Animations: Animations,
             Transitioner: Transitioner
         },
@@ -9752,15 +9752,15 @@
             videoAutoplay: false,
             delayControls: 3000,
             items: [],
-            cls: 'uk-open',
-            clsPage: 'uk-lightbox-page',
-            selList: '.uk-lightbox-items',
-            attrItem: 'uk-lightbox-item',
-            selClose: '.uk-close-large',
+            cls: 'fl-open',
+            clsPage: 'fl-lightbox-page',
+            selList: '.fl-lightbox-items',
+            attrItem: 'fl-lightbox-item',
+            selClose: '.fl-close-large',
             pauseOnHover: false,
             velocity: 2,
             Animations: Animations$1,
-            template: "<div class=\"uk-lightbox uk-overflow-hidden\"> <ul class=\"uk-lightbox-items\"></ul> <div class=\"uk-lightbox-toolbar uk-position-top uk-text-right uk-transition-slide-top uk-transition-opaque\"> <button class=\"uk-lightbox-toolbar-icon uk-close-large\" type=\"button\" uk-close></button> </div> <a class=\"uk-lightbox-button uk-position-center-left uk-position-medium uk-transition-fade\" href=\"#\" uk-slidenav-previous uk-lightbox-item=\"previous\"></a> <a class=\"uk-lightbox-button uk-position-center-right uk-position-medium uk-transition-fade\" href=\"#\" uk-slidenav-next uk-lightbox-item=\"next\"></a> <div class=\"uk-lightbox-toolbar uk-lightbox-caption uk-position-bottom uk-text-center uk-transition-slide-bottom uk-transition-opaque\"></div> </div>"
+            template: "<div class=\"fl-lightbox fl-overflow-hidden\"> <ul class=\"fl-lightbox-items\"></ul> <div class=\"fl-lightbox-toolbar fl-position-top fl-text-right fl-transition-slide-top fl-transition-opaque\"> <button class=\"fl-lightbox-toolbar-icon fl-close-large\" type=\"button\" fl-close></button> </div> <a class=\"fl-lightbox-button fl-position-center-left fl-position-medium fl-transition-fade\" href=\"#\" fl-slidenav-previous fl-lightbox-item=\"previous\"></a> <a class=\"fl-lightbox-button fl-position-center-right fl-position-medium fl-transition-fade\" href=\"#\" fl-slidenav-next fl-lightbox-item=\"next\"></a> <div class=\"fl-lightbox-toolbar fl-lightbox-caption fl-position-bottom fl-text-center fl-transition-slide-bottom fl-transition-opaque\"></div> </div>"
         }); },
 
         created: function() {
@@ -9769,7 +9769,7 @@
 
             this.$mount(append(this.container, this.template));
 
-            this.caption = $('.uk-lightbox-caption', this.$el);
+            this.caption = $('.fl-lightbox-caption', this.$el);
 
             this.items.forEach(function () { return append(this$1.list, '<li></li>'); });
 
@@ -9939,7 +9939,7 @@
                     var type = item.type;
                     var alt = item.alt;
 
-                    this.setItem(item, '<span uk-spinner></span>');
+                    this.setItem(item, '<span fl-spinner></span>');
 
                     if (!source) {
                         return;
@@ -9958,7 +9958,7 @@
                         // Video
                     } else if (type === 'video' || source.match(/\.(mp4|webm|ogv)($|\?)/i)) {
 
-                        var video = $(("<video controls playsinline" + (item.poster ? (" poster=\"" + (item.poster) + "\"") : '') + " uk-video=\"" + (this.videoAutoplay) + "\"></video>"));
+                        var video = $(("<video controls playsinline" + (item.poster ? (" poster=\"" + (item.poster) + "\"") : '') + " fl-video=\"" + (this.videoAutoplay) + "\"></video>"));
                         attr(video, 'src', source);
 
                         once(video, 'error loadedmetadata', function (type) {
@@ -9973,7 +9973,7 @@
                         // Iframe
                     } else if (type === 'iframe' || source.match(/\.(html|php)($|\?)/i)) {
 
-                        this.setItem(item, ("<iframe class=\"uk-lightbox-iframe\" src=\"" + source + "\" frameborder=\"0\" allowfullscreen></iframe>"));
+                        this.setItem(item, ("<iframe class=\"fl-lightbox-iframe\" src=\"" + source + "\" frameborder=\"0\" allowfullscreen></iframe>"));
 
                         // YouTube
                     } else if ((matches = source.match(/\/\/.*?youtube(-nocookie)?\.[a-z]+\/watch\?v=([^&\s]+)/) || source.match(/()youtu\.be\/(.*)/))) {
@@ -10061,7 +10061,7 @@
             },
 
             setError: function(item) {
-                this.setItem(item, '<span uk-icon="icon: bolt; ratio: 2"></span>');
+                this.setItem(item, '<span fl-icon="icon: bolt; ratio: 2"></span>');
             },
 
             showControls: function() {
@@ -10069,12 +10069,12 @@
                 clearTimeout(this.controlsTimer);
                 this.controlsTimer = setTimeout(this.hideControls, this.delayControls);
 
-                addClass(this.$el, 'uk-active', 'uk-transition-active');
+                addClass(this.$el, 'fl-active', 'fl-transition-active');
 
             },
 
             hideControls: function() {
-                removeClass(this.$el, 'uk-active', 'uk-transition-active');
+                removeClass(this.$el, 'fl-active', 'fl-transition-active');
             }
 
         }
@@ -10082,7 +10082,7 @@
     };
 
     function getIframe(src, width, height, autoplay) {
-        return ("<iframe src=\"" + src + "\" width=\"" + width + "\" height=\"" + height + "\" style=\"max-width: 100%; box-sizing: border-box;\" frameborder=\"0\" allowfullscreen uk-video=\"autoplay: " + autoplay + "\" uk-responsive></iframe>");
+        return ("<iframe src=\"" + src + "\" width=\"" + width + "\" height=\"" + height + "\" style=\"max-width: 100%; box-sizing: border-box;\" frameborder=\"0\" allowfullscreen fl-video=\"autoplay: " + autoplay + "\" fl-responsive></iframe>");
     }
 
     var Lightbox = {
@@ -10126,7 +10126,7 @@
                 name: 'click',
 
                 delegate: function() {
-                    return ((this.toggle) + ":not(.uk-disabled)");
+                    return ((this.toggle) + ":not(.fl-disabled)");
                 },
 
                 handler: function(e) {
@@ -10167,15 +10167,15 @@
 
     };
 
-    function install$2(UIkit, Lightbox) {
+    function install$2(flUIkit, Lightbox) {
 
-        if (!UIkit.lightboxPanel) {
-            UIkit.component('lightboxPanel', lightboxPanel);
+        if (!flUIkit.lightboxPanel) {
+            flUIkit.component('lightboxPanel', lightboxPanel);
         }
 
         assign(
             Lightbox.props,
-            UIkit.component('lightboxPanel').options.props
+            flUIkit.component('lightboxPanel').options.props
         );
 
     }
@@ -10203,8 +10203,8 @@
             timeout: 5000,
             group: null,
             pos: 'top-center',
-            clsClose: 'uk-notification-close',
-            clsMsg: 'uk-notification-message'
+            clsClose: 'fl-notification-close',
+            clsMsg: 'fl-notification-message'
         },
 
         install: install$3,
@@ -10228,13 +10228,13 @@
         created: function() {
 
             if (!containers[this.pos]) {
-                containers[this.pos] = append(this.$container, ("<div class=\"uk-notification uk-notification-" + (this.pos) + "\"></div>"));
+                containers[this.pos] = append(this.$container, ("<div class=\"fl-notification fl-notification-" + (this.pos) + "\"></div>"));
             }
 
             var container = css(containers[this.pos], 'display', 'block');
 
             this.$mount(append(container,
-                ("<div class=\"" + (this.clsMsg) + (this.status ? (" " + (this.clsMsg) + "-" + (this.status)) : '') + "\"> <a href=\"#\" class=\"" + (this.clsClose) + "\" data-uk-close></a> <div>" + (this.message) + "</div> </div>")
+                ("<div class=\"" + (this.clsMsg) + (this.status ? (" " + (this.clsMsg) + "-" + (this.status)) : '') + "\"> <a href=\"#\" class=\"" + (this.clsClose) + "\" data-fl-close></a> <div>" + (this.message) + "</div> </div>")
             ));
 
         },
@@ -10307,10 +10307,10 @@
 
     };
 
-    function install$3(UIkit) {
-        UIkit.notification.closeAll = function (group, immediate) {
+    function install$3(flUIkit) {
+        flUIkit.notification.closeAll = function (group, immediate) {
             apply(document.body, function (el) {
-                var notification = UIkit.getComponent(el, 'notification');
+                var notification = flUIkit.getComponent(el, 'notification');
                 if (notification && (!group || group === notification.group)) {
                     notification.close(immediate);
                 }
@@ -10962,10 +10962,10 @@
         data: {
             center: false,
             sets: false,
-            attrItem: 'uk-slider-item',
-            selList: '.uk-slider-items',
-            selNav: '.uk-slider-nav',
-            clsContainer: 'uk-slider-container',
+            attrItem: 'fl-slider-item',
+            selList: '.fl-slider-items',
+            selNav: '.fl-slider-nav',
+            clsContainer: 'fl-slider-container',
             Transitioner: Transitioner$1
         },
 
@@ -11073,7 +11073,7 @@
 
                 $$(("[" + (this.attrItem) + "],[data-" + (this.attrItem) + "]"), this.$el).forEach(function (el) {
                     var index = data(el, this$1.attrItem);
-                    this$1.maxIndex && toggleClass(el, 'uk-hidden', isNumeric(index) && (this$1.sets && !includes(this$1.sets, toFloat(index)) || index > this$1.maxIndex));
+                    this$1.maxIndex && toggleClass(el, 'fl-hidden', isNumeric(index) && (this$1.sets && !includes(this$1.sets, toFloat(index)) || index > this$1.maxIndex));
                 });
 
             },
@@ -11455,9 +11455,9 @@
             ratio: '16:9',
             minHeight: false,
             maxHeight: false,
-            selList: '.uk-slideshow-items',
-            attrItem: 'uk-slideshow-item',
-            selNav: '.uk-slideshow-nav',
+            selList: '.fl-slideshow-items',
+            attrItem: 'fl-slideshow-item',
+            selNav: '.fl-slideshow-nav',
             Animations: Animations$2
         },
 
@@ -11515,13 +11515,13 @@
         data: {
             group: false,
             threshold: 5,
-            clsItem: 'uk-sortable-item',
-            clsPlaceholder: 'uk-sortable-placeholder',
-            clsDrag: 'uk-sortable-drag',
-            clsDragState: 'uk-drag',
-            clsBase: 'uk-sortable',
-            clsNoDrag: 'uk-sortable-nodrag',
-            clsEmpty: 'uk-sortable-empty',
+            clsItem: 'fl-sortable-item',
+            clsPlaceholder: 'fl-sortable-placeholder',
+            clsDrag: 'fl-sortable-drag',
+            clsDragState: 'fl-drag',
+            clsBase: 'fl-sortable',
+            clsNoDrag: 'fl-sortable-nodrag',
+            clsEmpty: 'fl-sortable-empty',
             clsCustom: '',
             handle: false
         },
@@ -11629,7 +11629,7 @@
                     width: this.placeholder.offsetWidth,
                     height: this.placeholder.offsetHeight
                 }, css(this.placeholder, ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'])));
-                attr(this.drag, 'uk-no-boot', '');
+                attr(this.drag, 'fl-no-boot', '');
                 addClass(this.drag, this.clsDrag, this.clsCustom);
 
                 height(this.drag.firstElementChild, height(this.placeholder.firstElementChild));
@@ -11810,10 +11810,10 @@
             pos: 'top',
             title: '',
             delay: 0,
-            animation: ['uk-animation-scale-up'],
+            animation: ['fl-animation-scale-up'],
             duration: 100,
-            cls: 'uk-active',
-            clsPos: 'uk-tooltip'
+            cls: 'fl-active',
+            clsPos: 'fl-tooltip'
         },
 
         beforeConnect: function() {
@@ -11938,7 +11938,7 @@
 
         data: {
             allow: false,
-            clsDragover: 'uk-dragover',
+            clsDragover: 'fl-dragover',
             concurrent: 1,
             maxSize: 0,
             method: 'POST',
@@ -12119,24 +12119,24 @@
         e.stopPropagation();
     }
 
-    UIkit.component('countdown', Countdown);
-    UIkit.component('filter', Filter);
-    UIkit.component('lightbox', Lightbox);
-    UIkit.component('lightboxPanel', lightboxPanel);
-    UIkit.component('notification', Notification);
-    UIkit.component('parallax', Parallax$1);
-    UIkit.component('slider', Slider$1);
-    UIkit.component('sliderParallax', SliderParallax);
-    UIkit.component('slideshow', Slideshow$1);
-    UIkit.component('slideshowParallax', SliderParallax);
-    UIkit.component('sortable', Sortable);
-    UIkit.component('tooltip', Tooltip);
-    UIkit.component('upload', Upload);
+    flUIkit.component('countdown', Countdown);
+    flUIkit.component('filter', Filter);
+    flUIkit.component('lightbox', Lightbox);
+    flUIkit.component('lightboxPanel', lightboxPanel);
+    flUIkit.component('notification', Notification);
+    flUIkit.component('parallax', Parallax$1);
+    flUIkit.component('slider', Slider$1);
+    flUIkit.component('sliderParallax', SliderParallax);
+    flUIkit.component('slideshow', Slideshow$1);
+    flUIkit.component('slideshowParallax', SliderParallax);
+    flUIkit.component('sortable', Sortable);
+    flUIkit.component('tooltip', Tooltip);
+    flUIkit.component('upload', Upload);
 
     {
-        boot(UIkit);
+        boot(flUIkit);
     }
 
-    return UIkit;
+    return flUIkit;
 
 }));
